@@ -174,6 +174,31 @@ function fileformat(result){
     result.title = result.title.split(`)`).join('')
     result.title = result.title.split(`=`).join('')
 
+    result.artist = result.artist.split('?').join('')
+    result.artist = result.artist.split('"').join('')
+    result.artist = result.artist.split('#').join('')
+    result.artist = result.artist.split('&').join('')
+    result.artist = result.artist.split('{').join('')
+    result.artist = result.artist.split('}').join('')
+    result.artist = result.artist.split(`\``).join('')
+    result.artist = result.artist.split('<').join('')
+    result.artist = result.artist.split('>').join('')
+    result.artist = result.artist.split('?').join('')
+    result.artist = result.artist.split('/').join('')
+    result.artist = result.artist.split('$').join('')
+    result.artist = result.artist.split('!').join('')
+    result.artist = result.artist.split(`'`).join('')
+    result.artist = result.artist.split(`:`).join('')
+    result.artist = result.artist.split(`@`).join('')
+    result.artist = result.artist.split(`+`).join('')
+    result.artist = result.artist.split('`').join('')
+    result.artist = result.artist.split(`|`).join('')
+    result.artist = result.artist.split(`(`).join('')
+    result.artist = result.artist.split(`)`).join('')
+    result.artist = result.artist.split(`=`).join('')
+
+
+
     result.title = `${result.title} by ${result.artist}`
     return result
 }
