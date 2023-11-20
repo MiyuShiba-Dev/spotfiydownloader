@@ -1,0 +1,2 @@
+node spotfiydownloader.js
+pause
