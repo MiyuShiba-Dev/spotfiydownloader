@@ -123,13 +123,14 @@ var index = 0;
 function callupplaylist(){
     downloadplaylist()
 }
+var errorlog = []
 
 function downloadplaylist(){
     if (index < linksgb.length){
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                 try{
-                    var track = spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
+                    spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
                         setTimeout(()=>{
@@ -139,13 +140,44 @@ function downloadplaylist(){
                         },20)
                         })
                 } catch(e){
-                    var res = spotfiydl.retryDownload(track);
-                    console.log(res)
+                    console.log('Console: This track has error, proceed to skip')
+                    console.log(`Current progress: ${index+1}/${linksgb.length}`)
+                    errorlog.push(index)
+                    setTimeout(()=>{
+                        console.log(' ')
+                        index++
+                        callupplaylist()
+                    },20)
                 }
         })
     } else {
-        console.log('Console: You may retrieve your music on C:/Users/${os.userInfo().username}/Downloads/output')
-        console.log('Console: All operation has completed. Please ctrl+c to restart or close.')
+        if (errorlog.length>0){
+            console.log(`Console: There is error encouter. Fetching the Error log`)
+            
+                var rl = readline.createInterface({
+                    input: fs.createReadStream(ans)
+                })
+                var items = []
+                rl.on('line',(data)=>{
+                    items.push(data)
+                })
+                rl.on('close',()=>{
+                    for (let errorv = 0; errorv>errorlog.length;errorv++){
+                        for (let i = 1; i<items.length;i++){
+                            var filtritems = items[i].split(',')
+                            var ids = filtritems
+                            if (errorlog[errorv].includes(ids[0])){
+                                console.log(`Console: This track has some issues: ${ids[2]} by ${ids[3]}`)
+                            }
+                        }
+                    }
+                    console.log(`Console: You may retrieve your music on C:/Users/${os.userInfo().username}/Downloads/output`)
+                    console.log('Console: All operation has completed. Please ctrl+c to restart or close.')
+                })
+        } else {
+            console.log(`Console: You may retrieve your music on C:/Users/${os.userInfo().username}/Downloads/output`)
+            console.log('Console: All operation has completed. Please ctrl+c to restart or close.')
+        }
     }
 }
 
