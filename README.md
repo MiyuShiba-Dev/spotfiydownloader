@@ -1,5 +1,5 @@
 # spotfiydownloader
-Using Command Prompt to download the spotify music into mp3
+Using Command Prompt to download spotify music into mp3
 
 
 
