@@ -128,11 +128,11 @@ function downloadplaylist(){
     if (index < linksgb.length){
         try{
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
-            if (result == null || result == undefined)
+            if (result === null || result === undefined)
             throw e
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
-            if (result == null || result == undefined)
+            if (result === null || result === undefined)
             throw e
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
@@ -141,7 +141,7 @@ function downloadplaylist(){
                             console.log(' ')
                             index++
                             callupplaylist()
-                        },20)
+                        },150)
                         })
         })
     }
@@ -156,7 +156,7 @@ function downloadplaylist(){
                 console.log(' ')
                 index++
                 callupplaylist()
-            },20)
+            },150)
         } else {
             setTimeout(()=>{
                 console.log('Console: This track has error, attempt to retry')
@@ -206,53 +206,58 @@ if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/output`)){
 
 function fileformat(result){
     //Remove all special chara
-    result.title = result.title.split('?').join('')
-    result.title = result.title.split('"').join('')
-    result.title = result.title.split('#').join('')
-    result.title = result.title.split('&').join('')
-    result.title = result.title.split('{').join('')
-    result.title = result.title.split('}').join('')
-    result.title = result.title.split(`\``).join('')
-    result.title = result.title.split('<').join('')
-    result.title = result.title.split('>').join('')
-    result.title = result.title.split('?').join('')
-    result.title = result.title.split('/').join('')
-    result.title = result.title.split('$').join('')
-    result.title = result.title.split('!').join('')
-    result.title = result.title.split(`'`).join('')
-    result.title = result.title.split(`:`).join('')
-    result.title = result.title.split(`@`).join('')
-    result.title = result.title.split(`+`).join('')
-    result.title = result.title.split('`').join('')
-    result.title = result.title.split(`|`).join('')
-    result.title = result.title.split(`(`).join('')
-    result.title = result.title.split(`)`).join('')
-    result.title = result.title.split(`=`).join('')
-    result.title = result.title.split(` `).join(' ')
+    try{
+        result.title = result.title.split('?').join('')
+        result.title = result.title.split('"').join('')
+        result.title = result.title.split('#').join('')
+        result.title = result.title.split('&').join('')
+        result.title = result.title.split('{').join('')
+        result.title = result.title.split('}').join('')
+        result.title = result.title.split(`\``).join('')
+        result.title = result.title.split('<').join('')
+        result.title = result.title.split('>').join('')
+        result.title = result.title.split('?').join('')
+        result.title = result.title.split('/').join('')
+        result.title = result.title.split('$').join('')
+        result.title = result.title.split('!').join('')
+        result.title = result.title.split(`'`).join('')
+        result.title = result.title.split(`:`).join('')
+        result.title = result.title.split(`@`).join('')
+        result.title = result.title.split(`+`).join('')
+        result.title = result.title.split('`').join('')
+        result.title = result.title.split(`|`).join('')
+        result.title = result.title.split(`(`).join('')
+        result.title = result.title.split(`)`).join('')
+        result.title = result.title.split(`=`).join('')
+        result.title = result.title.split(` `).join(' ')
+    
+        result.artist = result.artist.split('?').join('')
+        result.artist = result.artist.split('"').join('')
+        result.artist = result.artist.split('#').join('')
+        result.artist = result.artist.split('&').join('')
+        result.artist = result.artist.split('{').join('')
+        result.artist = result.artist.split('}').join('')
+        result.artist = result.artist.split(`\``).join('')
+        result.artist = result.artist.split('<').join('')
+        result.artist = result.artist.split('>').join('')
+        result.artist = result.artist.split('?').join('')
+        result.artist = result.artist.split('/').join('')
+        result.artist = result.artist.split('$').join('')
+        result.artist = result.artist.split('!').join('')
+        result.artist = result.artist.split(`'`).join('')
+        result.artist = result.artist.split(`:`).join('')
+        result.artist = result.artist.split(`@`).join('')
+        result.artist = result.artist.split(`+`).join('')
+        result.artist = result.artist.split('`').join('')
+        result.artist = result.artist.split(`|`).join('')
+        result.artist = result.artist.split(`(`).join('')
+        result.artist = result.artist.split(`)`).join('')
+        result.artist = result.artist.split(`=`).join('')
+        result.artist = result.artist.split(` `).join(' ') 
+    } catch (e){
+        throw e
+    }
 
-    result.artist = result.artist.split('?').join('')
-    result.artist = result.artist.split('"').join('')
-    result.artist = result.artist.split('#').join('')
-    result.artist = result.artist.split('&').join('')
-    result.artist = result.artist.split('{').join('')
-    result.artist = result.artist.split('}').join('')
-    result.artist = result.artist.split(`\``).join('')
-    result.artist = result.artist.split('<').join('')
-    result.artist = result.artist.split('>').join('')
-    result.artist = result.artist.split('?').join('')
-    result.artist = result.artist.split('/').join('')
-    result.artist = result.artist.split('$').join('')
-    result.artist = result.artist.split('!').join('')
-    result.artist = result.artist.split(`'`).join('')
-    result.artist = result.artist.split(`:`).join('')
-    result.artist = result.artist.split(`@`).join('')
-    result.artist = result.artist.split(`+`).join('')
-    result.artist = result.artist.split('`').join('')
-    result.artist = result.artist.split(`|`).join('')
-    result.artist = result.artist.split(`(`).join('')
-    result.artist = result.artist.split(`)`).join('')
-    result.artist = result.artist.split(`=`).join('')
-    result.artist = result.artist.split(` `).join(' ')
 
 
     result.title = `${result.title} by ${result.artist}`
