@@ -124,36 +124,49 @@ function callupplaylist(){
     downloadplaylist()
 }
 var errorlog = []
+var tryes = 0
 
 function downloadplaylist(){
     if (index < linksgb.length){
+        try{
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
-                try{
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
                         setTimeout(()=>{
+                            tryes = 0
                             console.log(' ')
                             index++
                             callupplaylist()
                         },20)
                         })
-                } catch(e){
-                    console.log('Console: This track has error, proceed to skip')
-                    console.log(`Current progress: ${index+1}/${linksgb.length}`)
-                    errorlog.push(index)
-                    setTimeout(()=>{
-                        console.log(' ')
-                        index++
-                        callupplaylist()
-                    },20)
-                }
         })
+    }
+    catch(e){
+        if (tryes>2){
+            console.log('Console: This track has error, proceed to skip')
+            console.log(`Current progress: ${index+1}/${linksgb.length}`)
+            errorlog.push(index)
+            setTimeout(()=>{
+                tryes = 0
+                console.log(' ')
+                index++
+                callupplaylist()
+            },20)
+        } else {
+            setTimeout(()=>{
+                console.log('Console: This track has error, attempt to retry')
+                console.log(`Current progress: ${index+1}/${linksgb.length}`)
+                console.log(' ')
+                tryes++
+                callupplaylist()
+            },20)
+        }
+    }
     } else {
         if (errorlog.length>0){
             console.log(`Console: There is error encouter. Fetching the Error log`)
-            
                 var rl = readline.createInterface({
                     input: fs.createReadStream(ans)
                 })
@@ -205,7 +218,6 @@ function fileformat(result){
     result.title = result.title.split(`(`).join('')
     result.title = result.title.split(`)`).join('')
     result.title = result.title.split(`=`).join('')
-    result.title = result.title.split(` `).join('')
 
     result.artist = result.artist.split('?').join('')
     result.artist = result.artist.split('"').join('')
@@ -229,7 +241,6 @@ function fileformat(result){
     result.artist = result.artist.split(`(`).join('')
     result.artist = result.artist.split(`)`).join('')
     result.artist = result.artist.split(`=`).join('')
-    result.artist = result.artist.split(` `).join('')
 
 
 
