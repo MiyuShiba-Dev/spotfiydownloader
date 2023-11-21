@@ -141,7 +141,7 @@ function downloadplaylist(){
                             console.log(' ')
                             index++
                             callupplaylist()
-                        },150)
+                        },200)
                         })
         })
     }
@@ -156,7 +156,7 @@ function downloadplaylist(){
                 console.log(' ')
                 index++
                 callupplaylist()
-            },150)
+            },200)
         } else {
             setTimeout(()=>{
                 console.log('Console: This track has error, attempt to retry')
@@ -164,7 +164,7 @@ function downloadplaylist(){
                 console.log(' ')
                 tryes++
                 callupplaylist()
-            },20)
+            },200)
         }
     }
     } else {
