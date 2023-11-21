@@ -8,7 +8,7 @@ Using Command Prompt to download the spotify music into mp3
 
 
 ## TAKE NOTE THIS STILL CURRENTLY SCUFF DEVELOPMENT.
-You are require to use [node.js] runtime. 
+You are require to use *node.js* ver 20.9.0 runtime. - https://nodejs.org/en/
 
 ## Features
 Support Spotify's Tracks, Album and Playlist
