@@ -128,20 +128,16 @@ function downloadplaylist(){
     if (index < linksgb.length){
         try{
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
-            if (result === null || result === undefined)
-            throw e
+            if (result.id === null || result.id === undefined || result.id == '')
+            throw new Error()
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
-            if (result === null || result === undefined)
-            throw e
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
-                        setTimeout(()=>{
-                            tryes = 0
-                            console.log(' ')
-                            index++
-                            callupplaylist()
-                        },200)
+                        tryes = 0
+                        console.log(' ')
+                        index++
+                        callupplaylist()
                         })
         })
     }
@@ -156,7 +152,7 @@ function downloadplaylist(){
                 console.log(' ')
                 index++
                 callupplaylist()
-            },200)
+            },500)
         } else {
             setTimeout(()=>{
                 console.log('Console: This track has error, attempt to retry')
@@ -164,7 +160,7 @@ function downloadplaylist(){
                 console.log(' ')
                 tryes++
                 callupplaylist()
-            },200)
+            },1000)
         }
     }
     } else {
