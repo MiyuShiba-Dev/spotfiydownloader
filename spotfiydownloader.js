@@ -2,7 +2,6 @@ const spotfiydl = require('spottydl')
 const readline = require('readline')
 const fs = require('fs')
 var os = require('os');
-const { func } = require('assert-plus');
 
 
 
@@ -132,6 +131,8 @@ function downloadplaylist(){
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
+                        if (result == null)
+                        throw e
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
                         setTimeout(()=>{
@@ -144,6 +145,7 @@ function downloadplaylist(){
         })
     }
     catch(e){
+        console.log(e)
         if (tryes>2){
             console.log('Console: This track has error, proceed to skip')
             console.log(`Current progress: ${index+1}/${linksgb.length}`)
