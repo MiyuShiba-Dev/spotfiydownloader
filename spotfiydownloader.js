@@ -126,10 +126,9 @@ var tryes = 0
 
 function downloadplaylist(){
     if (index < linksgb.length){
-        try{
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
             if (result.id === null || result.id === undefined || result.id == '')
-            throw new Error()
+            errorhandler(true)
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
                         console.log('Console: This track completed the download')
@@ -140,29 +139,7 @@ function downloadplaylist(){
                         callupplaylist()
                         })
         })
-    }
-    catch(e){
-        console.log(e)
-        if (tryes>2){
-            console.log('Console: This track has error, proceed to skip')
-            console.log(`Current progress: ${index+1}/${linksgb.length}`)
-            errorlog.push(index)
-            setTimeout(()=>{
-                tryes = 0
-                console.log(' ')
-                index++
-                callupplaylist()
-            },500)
-        } else {
-            setTimeout(()=>{
-                console.log('Console: This track has error, attempt to retry')
-                console.log(`Current progress: ${index+1}/${linksgb.length}`)
-                console.log(' ')
-                tryes++
-                callupplaylist()
-            },1000)
-        }
-    }
+
     } else {
         if (errorlog.length>0){
             console.log(`Console: There is error encouter. Fetching the Error log`)
@@ -199,6 +176,27 @@ if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/output`)){
 }
 }
 
+function errorhandler(error){
+    if (tryes>2 && error == true){
+        console.log('Console: This track has error, proceed to skip')
+        console.log(`Current progress: ${index+1}/${linksgb.length}`)
+        errorlog.push(index)
+        setTimeout(()=>{
+            tryes = 0
+            console.log(' ')
+            index++
+            callupplaylist()
+        },500)
+    } else {
+        setTimeout(()=>{
+            console.log('Console: This track has error, attempt to retry')
+            console.log(`Current progress: ${index+1}/${linksgb.length}`)
+            console.log(' ')
+            tryes++
+            callupplaylist()
+        },1000)
+    }
+}
 
 function fileformat(result){
     //Remove all special chara
