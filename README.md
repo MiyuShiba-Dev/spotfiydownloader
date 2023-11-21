@@ -18,6 +18,9 @@ Support Spotify's Tracks, Album and Playlist
 You need to export your playlist via https://exportify.net/#playlists where it require you to add csv file as your path
 and let the magic do work for you
 
+This to fix the spottydl's playlist code where it has issues with API retrieve. That's why I need do alot of roundabout.
+
+
 # Disclaimer
 IF YOU WANT TO CONFIRM IF THIS VIRUS GO SEE THE CODE YOURSELF. I CAN ADSURE YOU THERE NO VIRUS OR MALWARE TO ATTACK YOU.
 
