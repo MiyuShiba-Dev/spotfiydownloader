@@ -13,9 +13,7 @@ const ux = readline.createInterface({
 })
 var error = false
 //folder checker
-if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/output`)){
-    fs.mkdirSync(`C:/Users/${os.userInfo().username}/Downloads/output`)
-}
+mdkchecker()
 // Process of downloading
 console.log(`Console: Welcome to spotfiy download command prompt. What did you want to do?`)
 console.log(`1) Read Spotfiy local database. Type "1"`)
@@ -120,6 +118,7 @@ switch(type){
 }
 var index = 0;
 function callupplaylist(){
+    mdkchecker()
     downloadplaylist()
 }
 var errorlog = []
@@ -133,8 +132,8 @@ function downloadplaylist(){
             throw e
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
                     spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
-                        if (result == null || result == undefined)
-                        throw e
+            if (result == null || result == undefined)
+            throw e
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
                         setTimeout(()=>{
@@ -197,6 +196,13 @@ function downloadplaylist(){
         }
     }
 }
+function mdkchecker(){
+//folder checker
+if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/output`)){
+    fs.mkdirSync(`C:/Users/${os.userInfo().username}/Downloads/output`)
+}
+}
+
 
 function fileformat(result){
     //Remove all special chara
@@ -222,6 +228,7 @@ function fileformat(result){
     result.title = result.title.split(`(`).join('')
     result.title = result.title.split(`)`).join('')
     result.title = result.title.split(`=`).join('')
+    result.title = result.title.split(` `).join('_')
 
     result.artist = result.artist.split('?').join('')
     result.artist = result.artist.split('"').join('')
@@ -245,7 +252,7 @@ function fileformat(result){
     result.artist = result.artist.split(`(`).join('')
     result.artist = result.artist.split(`)`).join('')
     result.artist = result.artist.split(`=`).join('')
-
+    result.artist = result.artist.split(` `).join('_')
 
 
     result.title = `${result.title} by ${result.artist}`
