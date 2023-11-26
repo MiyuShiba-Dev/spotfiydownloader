@@ -137,14 +137,18 @@ function downloadplaylist(){
             if (result.id === null || result.id === undefined || result.id == '' || result === undefined || result === null)
             errorhandler(true)
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
-                    spotfiydl.downloadTrack(fileformat(result),outputfilename).then(result=>{
-                        console.log('Console: This track completed the download')
-                        console.log(`Current progress: ${index+1}/${linksgb.length}`)
-                        tryes = 0
-                        console.log(' ')
-                        index++
-                        callupplaylist()
-                        })
+            try{
+                spotfiydl.downloadTrack(fileformat(result),outputfilename).then(result=>{
+                    console.log('Console: This track completed the download')
+                    console.log(`Current progress: ${index+1}/${linksgb.length}`)
+                    tryes = 0
+                    console.log(' ')
+                    index++
+                    callupplaylist()
+                    })
+            } catch {
+                errorhandler(true)
+            }
         })
 
     } else {
