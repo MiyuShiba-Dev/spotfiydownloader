@@ -1,10 +1,9 @@
 const spotfiydl = require('spottydl')
 const readline = require('readline')
 const fs = require('fs')
-var os = require('os');
+var os = require('os')
 
-
-
+var outputfilename = ''
 var linksgb = []
 
 const ux = readline.createInterface({
@@ -13,7 +12,7 @@ const ux = readline.createInterface({
 })
 var error = false
 //folder checker
-mdkchecker()
+//mdkchecker()
 // Process of downloading
 console.log(`Console: Welcome to spotfiy download command prompt. What did you want to do?`)
 console.log(`1) Read Spotfiy local database. Type "1"`)
@@ -33,6 +32,8 @@ ux.question('Console: Insert the spotify link: ',ans =>{
             if (fs.existsSync(ans)){
                 console.log(`Console: File has been found, ${ans}`)
                 console.log(`Console: Preparing to read the file...`)
+                var splitname = ans.split(`\\`)
+                outputfilename = `C:/Users/${os.userInfo().username}/Downloads/${folderformat(splitname[splitname.length-1].split('.csv').join(''))}`
 
                 var rl = readline.createInterface({
                     input: fs.createReadStream(ans)
@@ -52,7 +53,7 @@ ux.question('Console: Insert the spotify link: ',ans =>{
                     console.log(`Console: Total found songs: ${filteritems.length} songs`)
                     console.log(`Console: Proceeding to download these ${filteritems.length} songs`)
                     linksgb = filteritems
-                    callupplaylist()
+                   callupplaylist()
                 })
             }
         })
@@ -95,21 +96,27 @@ ux.question('Console: Insert the spotify link: ',ans =>{
 function download (link,type,callback){
 switch(type){
     case 'track':
+        if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/track`)){
+            fs.mkdirSync(`C:/Users/${os.userInfo().username}/Downloads/track`)
+        }
     spotfiydl.getTrack(link).then(result =>{
         console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
-    spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
-        console.log('Console: This track completed the download')
+    spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/track`).then(result=>{
+        console.log(`Console: This track completed the download \n You may retrieve at C:/Users/${os.userInfo().username}/Downloads/track`)
         callback('Done')
         })
     })
         break;
     case 'album':
+        if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/album`)){
+            fs.mkdirSync(`C:/Users/${os.userInfo().username}/Downloads/album`)
+        }
         spotfiydl.getAlbum(link).then(result =>{
             result.name = result.name.split('?').join('')
             result.name = `${result.name} by ${result.artist}`
             console.log(`Console: Now downloading, ${result.name} by ${result.artist}, track number ${result.tracks.length}`)
-            spotfiydl.downloadAlbum(result,`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
-                console.log('Console: This track completed the download')
+            spotfiydl.downloadAlbum(result,`C:/Users/${os.userInfo().username}/Downloads/album`).then(result=>{
+                console.log(`Console: This track completed the download \n You may retrieve at C:/Users/${os.userInfo().username}/Downloads/album`)
                 callback('Done')
                 })
             })
@@ -127,10 +134,10 @@ var tryes = 0
 function downloadplaylist(){
     if (index < linksgb.length){
         spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
-            if (result.id === null || result.id === undefined || result.id == '')
+            if (result.id === null || result.id === undefined || result.id == '' || result === undefined || result === null)
             errorhandler(true)
             console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
-                    spotfiydl.downloadTrack(fileformat(result),`C:/Users/${os.userInfo().username}/Downloads/output`).then(result=>{
+                    spotfiydl.downloadTrack(fileformat(result),outputfilename).then(result=>{
                         console.log('Console: This track completed the download')
                         console.log(`Current progress: ${index+1}/${linksgb.length}`)
                         tryes = 0
@@ -160,19 +167,19 @@ function downloadplaylist(){
                             }
                         }
                     }
-                    console.log(`Console: You may retrieve your music on C:/Users/${os.userInfo().username}/Downloads/output`)
+                    console.log(`Console: You may retrieve your music on ${outputfilename}`)
                     console.log('Console: All operation has completed. Please ctrl+c to restart or close.')
                 })
         } else {
-            console.log(`Console: You may retrieve your music on C:/Users/${os.userInfo().username}/Downloads/output`)
+            console.log(`Console: You may retrieve your music on ${outputfilename}`)
             console.log('Console: All operation has completed. Please ctrl+c to restart or close.')
         }
     }
 }
 function mdkchecker(){
 //folder checker
-if(!fs.existsSync(`C:/Users/${os.userInfo().username}/Downloads/output`)){
-    fs.mkdirSync(`C:/Users/${os.userInfo().username}/Downloads/output`)
+if(!fs.existsSync(outputfilename)){
+    fs.mkdirSync(outputfilename)
 }
 }
 
@@ -207,7 +214,7 @@ function fileformat(result){
         result.title = result.title.split('&').join('')
         result.title = result.title.split('{').join('')
         result.title = result.title.split('}').join('')
-        result.title = result.title.split(`\``).join('')
+        result.title = result.title.split(`\\`).join('')
         result.title = result.title.split('<').join('')
         result.title = result.title.split('>').join('')
         result.title = result.title.split('?').join('')
@@ -231,7 +238,7 @@ function fileformat(result){
         result.artist = result.artist.split('&').join('')
         result.artist = result.artist.split('{').join('')
         result.artist = result.artist.split('}').join('')
-        result.artist = result.artist.split(`\``).join('')
+        result.artist = result.artist.split(`\\`).join('')
         result.artist = result.artist.split('<').join('')
         result.artist = result.artist.split('>').join('')
         result.artist = result.artist.split('?').join('')
@@ -249,11 +256,45 @@ function fileformat(result){
         result.artist = result.artist.split(`=`).join('')
         result.artist = result.artist.split(` `).join(' ') 
     } catch (e){
-        throw e
+        errorhandler(true)
     }
 
 
 
     result.title = `${result.title} by ${result.artist}`
     return result
+}
+
+function folderformat(filename){
+    //Remove all special chara
+    try{
+        filename = filename.split('?').join('')
+        filename = filename.split('"').join('')
+        filename = filename.split('#').join('')
+        filename = filename.split('&').join('')
+        filename = filename.split('{').join('')
+        filename = filename.split('}').join('')
+        filename = filename.split(`\\`).join('')
+        filename = filename.split('<').join('')
+        filename = filename.split('>').join('')
+        filename = filename.split('?').join('')
+        filename = filename.split('/').join('')
+        filename = filename.split('$').join('')
+        filename = filename.split('!').join('')
+        filename = filename.split(`'`).join('')
+        filename = filename.split(`:`).join('')
+        filename = filename.split(`@`).join('')
+        filename = filename.split(`+`).join('')
+        filename = filename.split('`').join('')
+        filename = filename.split(`|`).join('')
+        filename = filename.split(`(`).join('')
+        filename = filename.split(`)`).join('')
+        filename = filename.split(`=`).join('')
+        filename = filename.split(` `).join(' ')
+    
+    } catch (e){
+        throw e
+    }
+
+    return filename
 }
