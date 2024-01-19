@@ -153,6 +153,8 @@ function downloadplaylist(){
                         errorhandler(true)
                     }
                 }
+            }).catch(error=>{
+                errorhandler(true)
             })
         }
         if (linksgb[index] === ''){
