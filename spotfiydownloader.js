@@ -133,24 +133,31 @@ var tryes = 0
 
 function downloadplaylist(){
     if (index < linksgb.length){
-        spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
-            if (result.id === null || result.id === undefined || result.id == '' || result === undefined || result === null)
+        console.log(`URL ID: ${linksgb[index]}`)
+        if (!linksgb[index] !== ''){
+            spotfiydl.getTrack(`https://open.spotify.com/track/${linksgb[index]}`).then(result =>{
+                if (result.id === null || result.id === undefined || result.id == '' || result === undefined || result === null){
+                    errorhandler(true)
+                } else{
+                    console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
+                    try{
+                        spotfiydl.downloadTrack(fileformat(result),outputfilename).then(result=>{
+                            console.log('Console: This track completed the download')
+                            console.log(`Current progress: ${index+1}/${linksgb.length}`)
+                            tryes = 0
+                            console.log(' ')
+                            index++
+                            callupplaylist()
+                            })
+                    } catch {
+                        errorhandler(true)
+                    }
+                }
+            })
+        }
+        if (linksgb[index] === ''){
             errorhandler(true)
-            console.log(`Console: Now downloading, ${result.title} by ${result.artist}, track number ${result.trackNumber}`)
-            try{
-                spotfiydl.downloadTrack(fileformat(result),outputfilename).then(result=>{
-                    console.log('Console: This track completed the download')
-                    console.log(`Current progress: ${index+1}/${linksgb.length}`)
-                    tryes = 0
-                    console.log(' ')
-                    index++
-                    callupplaylist()
-                    })
-            } catch {
-                errorhandler(true)
-            }
-        })
-
+        }
     } else {
         if (errorlog.length>0){
             console.log(`Console: There is error encouter. Fetching the Error log`)
